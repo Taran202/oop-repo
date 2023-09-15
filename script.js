@@ -10,14 +10,55 @@
 
 
 /* ********************************************* */
+/*klassen */
+/* ********************************************* */
+class Mensen{
+ x;
+ y;
+ speedsX;
+ speedsY;
+  breedte;
+  constructor(newX, newY, newSpeedX, newSpeedY) {
+    this.x = newX;
+    this.y = newY;
+    this.speedX = newSpeedX;
+    this.speedY = newSpeedY;
+    this.breedte = 20;
+}
+show(){fill(255,255,255)
+  rect(this.x, this.y, this.breedte, this.breedte);
+
+
+}
+
+update ()
+{
+  // stuiter tegen randen
+  if (this.x <= 0 || this.x + this.breedte >= width) {
+    this.speedX = this.speedX * -1;
+  }
+if(this.x <= 0|| this.x + this.breedte >= width) {
+  this.speedX = this.speedX * -1;
+}
+
+if(this.y<=0|| this.y+this.breedte>=height){
+    this.speedY= this.speedY* -1;
+}
+}
+
+
+
+
+
+
+/* ********************************************* */
 /* globale variabelen die je gebruikt in je game */
 /* ********************************************* */
-var xPosities;
-var yPosities;
-var speedsX;
-var speedsY;
-const BREEDTE = 20;
-var mensen;
+
+
+Mensen=[];
+
+
 
 
 
@@ -34,44 +75,45 @@ function setup() {
   // Maak een canvas (rechthoek) waarin je je speelveld kunt tekenen
   createCanvas(1280, 720);
 
-  // initialiseer waarden
-  mensen = [ { x: 130, y: 650, speedX: 2,  speedY: 1  },
-    { x: 34,  y: 478, speedX: -6, speedY: -4 },
-    { x: 420, y: 323,  speedX: 8,  speedY: -6 },
-    { x: 340, y: 123, speedX: -2, speedY: -2 },
-    { x: 800, y: 268,  speedX: -3, speedY: 5  } ];
-} 
+  // maak 25 random mensen
+  for (var teller = 0; teller < 25; teller++) {
+    // we moeten ze niet te dicht bij de rand tekenen
+    // om geen problemen met stuiteren te krijgen
+    var ruimteTotRand = 50;
+    
+    // creëer random positie en snelheid
+    var randomX = random(ruimteTotRand, width - ruimteTotRand);
+    var randomY = random(ruimteTotRand, height - ruimteTotRand);
+    var randomSpeedX = random(-5, 5);
+    var randomSpeedY = random(-5, 5);
+
+    // maak nieuw mensobject
+    var nieuwMens = new Mens(randomX, randomY, randomSpeedX, randomSpeedY);
+    
+    // voeg mensobject toe aan array
+    mensen.push(nieuwMens);
+  }
+}
 /**
  * draw
  * de code in deze functie wordt 50 keer per seconde
  * uitgevoerd door de p5 library, nadat de setup functie klaar is
  */
 function draw() {
-  // zwarte achtergrond
-  background(0, 0, 0);
-  //alle posities arra
-  for (var i = 0; i < Mensen.length; i++) {
-   var eenMens= Mensen[i]
-    // teken
-    noStroke;
-    fill(255, 255, 255);
-    rect(eenMens.x [i], eenMens.y[i], BREEDTE, BREEDTE);
-   //  posities
+   // zwarte achtergrond
+   background(0, 0, 0);
+  
 
-    eenMens.x = eenMens.x + eenMens.speedX;
-    eenMens.y = eenMens.y + eenMens.speedY;
-
+   // ga alle waarden in de arrays af:
+   for (var i = 0; i < mensen.length; i++) {
+     // verwijs met 'mens' naar het mens-object die bij deze
+     // iteratie van de loop hoort.
+     var mens = mensen[i];
+     
+     // teken
+     mens.show();
  
-    
-
-    // weg stuiter
-    if (eenMens.x <= 0 || eenMens.speedX+ BREEDTE >= width) {
-      eenMens.speedsX = eenMens.speedsX * -1;
-    }
-
-    if (eenMens.y <= 0 || eenMens.y + BREEDTE >= height) {
-      eenMens.speedY = eenMens.speedY * -1;
-    }
-
-  }
-}
+     // update positie en stuiter eventueel
+     mens.update();
+   }
+ }
